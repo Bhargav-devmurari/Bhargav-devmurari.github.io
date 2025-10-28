@@ -50,6 +50,42 @@
   .cta-row{display:flex;gap:12px;align-items:center}
   .ghost{padding:10px 14px;border-radius:8px;border:1px solid #e6e9ee;color:var(--accent);text-decoration:none;font-weight:600}
 
+  /* video slider */
+  .video-slider {
+  position: relative;
+  overflow: hidden;
+}
+
+.vid-controls {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.vid-arrow {
+  pointer-events: all;
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(11, 18, 26, 0.1);
+  border: 1px solid #eee;
+  user-select: none;
+}
+
+.vid-arrow:hover {
+  background: #fff;
+  transform: scale(1.05);
+}
+  
   /* Small animated counters / quick stats */
   .stats{display:flex;gap:12px;margin-top:14px}
   .stat{background:var(--card);padding:10px 12px;border-radius:10px;box-shadow:0 6px 20px rgba(11,18,26,0.04);font-weight:700}
@@ -165,8 +201,8 @@
       <p>I create visual stories that sell products, elevate brands, and capture authentic moments. I specialise in on-location shoots, product & e-commerce photography, and short-form promotional films.</p>
 
       <div class="cta-row">
-        <a href="#portfolio" class="btn">View Portfolio</a>
-        <a href="#contact" class="ghost">Let's Talk</a>
+        <a href="tel:+91 9723474389" class="btn">View Portfolio</a>
+        <a href="tel:+91 9723474389" class="ghost">Let's Talk</a>
       </div>
 
       <div class="stats" style="margin-top:14px">
@@ -218,28 +254,37 @@
 
     <div class="panel fade-up delay-2">
       <h4>Watch — Videos</h4>
-
+    
       <!-- video thumbnails slider -->
-      <div class="video-thumb" id="videoThumbs" tabindex="0" aria-label="Video thumbnails">
-        <!-- each vid-item has data-video attribute pointing to video source -->
-        <div class="vid-item" data-video="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" title="Promo 1">
-          <img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?q=80&w=800&auto=format&fit=crop" alt="Promo 1">
-          <div class="play-badge">&#9658;</div>
+      <div class="video-slider">
+        <div class="video-thumb" id="videoThumbs" tabindex="0" aria-label="Video thumbnails">
+          <!-- each vid-item has data-video attribute pointing to video source -->
+          <div class="vid-item" data-video="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" title="Promo 1">
+            <img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?q=80&w=800&auto=format&fit=crop" alt="Promo 1">
+            <div class="play-badge">&#9658;</div>
+          </div>
+    
+          <div class="vid-item" data-video="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm" title="Promo 2">
+            <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=800&auto=format&fit=crop" alt="Promo 2">
+            <div class="play-badge">&#9658;</div>
+          </div>
+    
+          <div class="vid-item" data-video="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" title="Promo 3">
+            <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=800&auto=format&fit=crop" alt="Promo 3">
+            <div class="play-badge">&#9658;</div>
+          </div>
         </div>
-
-        <div class="vid-item" data-video="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.webm" title="Promo 2">
-          <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?q=80&w=800&auto=format&fit=crop" alt="Promo 2">
-          <div class="play-badge">&#9658;</div>
-        </div>
-
-        <div class="vid-item" data-video="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" title="Promo 3">
-          <img src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=800&auto=format&fit=crop" alt="Promo 3">
-          <div class="play-badge">&#9658;</div>
+    
+        <!-- Video arrows -->
+        <div class="vid-controls">
+          <div class="vid-arrow prev">&#10094;</div>
+          <div class="vid-arrow next">&#10095;</div>
         </div>
       </div>
-
+    
       <p style="margin-top:12px;color:var(--muted)">Click any thumbnail to open the video in a popup. Videos are muted by default — click the player controls to unmute.</p>
     </div>
+
 
   </div>
 
@@ -307,6 +352,21 @@
 
   // Video thumbnails -> modal
   (function(){
+  const videoThumbs = document.getElementById("videoThumbs");
+  const prevBtn = document.querySelector(".vid-arrow.prev");
+  const nextBtn = document.querySelector(".vid-arrow.next");
+
+  const scrollAmount = 220; // pixels to scroll per click
+
+  prevBtn.addEventListener("click", () => {
+    videoThumbs.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+  });
+
+  nextBtn.addEventListener("click", () => {
+    videoThumbs.scrollBy({ left: scrollAmount, behavior: "smooth" });
+  });
+})();
+  (function(){
     const items = $$('.vid-item');
     const modal = $('#modal'), modalVideo = $('#modalVideo'), close = $('#modalClose');
 
@@ -334,6 +394,7 @@
     modal.addEventListener('click', (e)=> { if(e.target === modal) closeModal(); });
     document.addEventListener('keydown', (e)=> { if(e.key === 'Escape') closeModal(); });
   })();
+  
 
   // small accessibility: year
   document.getElementById('year').textContent = new Date().getFullYear();
@@ -353,3 +414,4 @@
 
 </body>
 </html>
+
