@@ -56,6 +56,56 @@
   overflow: hidden;
 }
 
+.video-thumb {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  padding: 8px;
+  scrollbar-width: none;
+}
+.video-thumb::-webkit-scrollbar {
+  display: none;
+}
+
+.vid-item {
+  flex: 0 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+  cursor: pointer;
+  position: relative;
+  scroll-snap-align: start;
+  transition: transform 0.3s ease;
+}
+
+.vid-item img {
+  width: 100%;
+  height: 110px;
+  object-fit: cover;
+  display: block;
+}
+
+.play-badge {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.5);
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+}
+
+.vid-item:hover {
+  transform: scale(1.03);
+}
+
+/* Controls */
 .vid-controls {
   position: absolute;
   top: 50%;
@@ -166,6 +216,25 @@
     .brand h1{font-size:16px}
     .logo{width:48px;height:48px}
   }
+  @media (min-width: 900px) {
+  .vid-item {
+    width: 30%;
+  }
+}
+
+/* Tablet - Show 2 videos per view */
+@media (max-width: 899px) and (min-width: 601px) {
+  .vid-item {
+    width: 48%;
+  }
+}
+
+/* Mobile - Show 1.2 videos (peek next one) */
+@media (max-width: 600px) {
+  .vid-item {
+    width: 83%; /* 1.2 visible items (100/1.2 = 83%) */
+  }
+}
 
   /* subtle entry animation */
   .fade-up{opacity:0;transform:translateY(10px);animation:fadeUp .6s forwards}
@@ -351,21 +420,27 @@
   })();
 
   // Video thumbnails -> modal
-  (function(){
+  // Video slider next/prev scroll functionality (responsive)
+(function(){
   const videoThumbs = document.getElementById("videoThumbs");
   const prevBtn = document.querySelector(".vid-arrow.prev");
   const nextBtn = document.querySelector(".vid-arrow.next");
 
-  const scrollAmount = 220; // pixels to scroll per click
+  // dynamically calculate scroll distance
+  function getScrollAmount() {
+    const item = videoThumbs.querySelector(".vid-item");
+    return item ? item.offsetWidth + 10 : 220; // include gap (10px)
+  }
 
   prevBtn.addEventListener("click", () => {
-    videoThumbs.scrollBy({ left: -scrollAmount, behavior: "smooth" });
+    videoThumbs.scrollBy({ left: -getScrollAmount(), behavior: "smooth" });
   });
 
   nextBtn.addEventListener("click", () => {
-    videoThumbs.scrollBy({ left: scrollAmount, behavior: "smooth" });
+    videoThumbs.scrollBy({ left: getScrollAmount(), behavior: "smooth" });
   });
 })();
+
   (function(){
     const items = $$('.vid-item');
     const modal = $('#modal'), modalVideo = $('#modalVideo'), close = $('#modalClose');
@@ -414,4 +489,5 @@
 
 </body>
 </html>
+
 
